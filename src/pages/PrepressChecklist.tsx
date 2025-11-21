@@ -75,28 +75,37 @@ const PrepressChecklist = () => {
     const handleGeneratePdf = () => {
         const input = printRef.current;
         if (input) {
-            html2canvas(input, { scale: 2, useCORS: true }).then(canvas => {
+            // Render at a fixed width to ensure a consistent, desktop-like layout in the PDF,
+            // which helps prevent excessive page breaks.
+            html2canvas(input, { 
+                scale: 2, 
+                useCORS: true,
+                windowWidth: 1024 // A typical desktop width to render the content
+            }).then(canvas => {
                 const imgData = canvas.toDataURL('image/png');
                 const pdf = new jsPDF('p', 'mm', 'a4');
-                
-                const pageMargin = 10;
-                const pdfWidth = pdf.internal.pageSize.getWidth() - (pageMargin * 2);
-                const pdfHeight = pdf.internal.pageSize.getHeight() - (pageMargin * 2);
+                const pdfWidth = pdf.internal.pageSize.getWidth();
+                const pdfHeight = pdf.internal.pageSize.getHeight();
 
                 const canvasAspectRatio = canvas.width / canvas.height;
+                const imgWidth = pdfWidth;
+                const imgHeight = imgWidth / canvasAspectRatio;
 
-                let imgWidth = pdfWidth;
-                let imgHeight = imgWidth / canvasAspectRatio;
+                let heightLeft = imgHeight;
+                let position = 0;
 
-                if (imgHeight > pdfHeight) {
-                    imgHeight = pdfHeight;
-                    imgWidth = imgHeight * canvasAspectRatio;
+                // Add the first page
+                pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+                heightLeft -= pdfHeight;
+
+                // Add subsequent pages if needed
+                while (heightLeft > 0) {
+                    position -= pdfHeight;
+                    pdf.addPage();
+                    pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+                    heightLeft -= pdfHeight;
                 }
-
-                const xOffset = (pdf.internal.pageSize.getWidth() - imgWidth) / 2;
-                const yOffset = pageMargin;
-
-                pdf.addImage(imgData, 'PNG', xOffset, yOffset, imgWidth, imgHeight);
+                
                 pdf.save(`OS_${headerData.osNumber || 'checklist'}.pdf`);
             });
         }
