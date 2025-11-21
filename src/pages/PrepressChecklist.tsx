@@ -155,7 +155,7 @@ const PrepressChecklist = () => {
 
                         <div>
                             <h3 className="text-lg sm:text-xl font-semibold mb-4 border-b pb-2 text-primary">Checklist de Itens</h3>
-                            <div className="space-y-6">
+                            <div className="space-y-4">
                                 {checklistItems.map((item, index) => {
                                     const option = checklistData[item].option;
                                     let itemClasses;
@@ -172,14 +172,14 @@ const PrepressChecklist = () => {
                                     }
 
                                     return (
-                                        <div key={index} className={`p-4 border-l-4 rounded-lg break-inside-avoid transition-all duration-300 hover:shadow-lg hover:scale-[1.01] ${itemClasses}`}>
-                                            <div className="flex items-start gap-4 mb-4">
-                                                <div className="flex-shrink-0 w-8 h-8 bg-primary/20 text-primary font-bold rounded-md flex items-center justify-center mt-1">
+                                        <div key={index} className={`p-3 border-l-4 rounded-lg break-inside-avoid transition-all duration-300 hover:shadow-lg hover:scale-[1.01] ${itemClasses}`}>
+                                            <div className="flex items-start gap-3 mb-3">
+                                                <div className="flex-shrink-0 w-7 h-7 bg-primary/20 text-primary font-bold rounded-md flex items-center justify-center">
                                                     {index + 1}
                                                 </div>
-                                                <p className="font-semibold text-foreground flex-grow text-sm sm:text-base pt-1">{item}</p>
+                                                <p className="font-semibold text-foreground flex-grow text-sm sm:text-base">{item}</p>
                                             </div>
-                                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center pl-4 sm:pl-12">
+                                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center pl-10">
                                                 {index === 14 ? (
                                                     <div className="flex flex-wrap items-center gap-x-6 gap-y-2">
                                                         <div className="flex items-center space-x-2">
@@ -234,7 +234,8 @@ const PrepressChecklist = () => {
                                                         placeholder="Observações..."
                                                         value={checklistData[item].observation}
                                                         onChange={(e) => handleChecklistChange(item, 'observation', e.target.value)}
-                                                        className="h-12 bg-white/80"
+                                                        className="bg-white/80"
+                                                        rows={1}
                                                     />
                                                 </div>
                                             </div>
