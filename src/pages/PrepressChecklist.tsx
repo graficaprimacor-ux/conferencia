@@ -7,7 +7,6 @@ import { Textarea } from "@/components/ui/textarea";
 import { CardTitle } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import jsPDF from 'jspdf';
-import html2canvas from 'html2canvas';
 
 const checklistItems = [
     "O TAMANHO DO ARQUIVO ESTÁ DE ACORDO",
@@ -75,29 +74,19 @@ const PrepressChecklist = () => {
     const handleGeneratePdf = () => {
         const input = printRef.current;
         if (input) {
-            html2canvas(input, { 
-                scale: 2, 
-                useCORS: true,
-                windowWidth: 1024
-            }).then(canvas => {
-                const imgData = canvas.toDataURL('image/png');
-                const pdf = new jsPDF('p', 'mm', 'a4');
-                const pdfWidth = pdf.internal.pageSize.getWidth();
-                const pdfHeight = pdf.internal.pageSize.getHeight();
-                const canvasAspectRatio = canvas.width / canvas.height;
-                const imgWidth = pdfWidth;
-                const imgHeight = imgWidth / canvasAspectRatio;
-                let heightLeft = imgHeight;
-                let position = 0;
-                pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
-                heightLeft -= pdfHeight;
-                while (heightLeft > 0) {
-                    position -= pdfHeight;
-                    pdf.addPage();
-                    pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
-                    heightLeft -= pdfHeight;
+            const pdf = new jsPDF('p', 'mm', 'a4', true);
+            pdf.html(input, {
+                callback: function (doc) {
+                    doc.save(`OS_${headerData.osNumber || 'checklist'}.pdf`);
+                },
+                margin: [10, 10, 10, 10],
+                autoPaging: 'text',
+                width: 190, // 210mm (A4) - 20mm margin
+                windowWidth: 1024, // Render at a desktop-like width
+                html2canvas: {
+                    scale: 2,
+                    useCORS: true,
                 }
-                pdf.save(`OS_${headerData.osNumber || 'checklist'}.pdf`);
             });
         }
     };
