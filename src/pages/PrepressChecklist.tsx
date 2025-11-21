@@ -4,8 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Textarea } from "@/components/ui/textarea";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
+import { CardTitle } from "@/components/ui/card";
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
 
@@ -91,87 +90,92 @@ const PrepressChecklist = () => {
     };
 
     return (
-        <div className="container mx-auto p-4 md:p-8 bg-slate-50 print:p-0 print:bg-white">
-            <div ref={printRef}>
-                <Card className="w-full max-w-4xl mx-auto shadow-xl print:shadow-none print:border-none">
-                    <CardHeader className="text-center">
-                        <img src="/logo.png" alt="Primacor Gráfica Logo" className="w-64 mx-auto mb-6" />
-                        <CardTitle className="text-3xl font-bold text-foreground">
+        <div className="min-h-screen bg-gradient-to-br from-gray-100 to-gray-200 container mx-auto p-4 md:p-8 print:p-0 print:bg-white">
+            <div ref={printRef} className="print:p-8">
+                <div className="w-full max-w-4xl mx-auto bg-white rounded-2xl shadow-2xl overflow-hidden print:shadow-none print:border print:rounded-none">
+                    <div className="p-8 bg-slate-50 border-b-4 border-primary print:bg-transparent print:border-none">
+                        <img src="/logo.png" alt="Primacor Gráfica Logo" className="w-56 mx-auto mb-6" />
+                        <CardTitle className="text-3xl font-bold text-center text-foreground">
                             Conferência de Pré-Impressão
                         </CardTitle>
-                    </CardHeader>
-                    <CardContent className="p-6 md:p-8">
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-                            <div className="space-y-2">
-                                <Label htmlFor="osNumber">Número da O.S:</Label>
-                                <Input id="osNumber" value={headerData.osNumber} onChange={handleHeaderChange} />
-                            </div>
-                            <div className="space-y-2">
-                                <Label htmlFor="clientNumber">Nº Cliente:</Label>
-                                <Input id="clientNumber" value={headerData.clientNumber} onChange={handleHeaderChange} />
-                            </div>
-                            <div className="space-y-2">
-                                <Label htmlFor="clientName">Nome do Cliente:</Label>
-                                <Input id="clientName" value={headerData.clientName} onChange={handleHeaderChange} />
-                            </div>
-                            <div className="space-y-2">
-                                <Label htmlFor="date">Data:</Label>
-                                <Input id="date" type="date" value={headerData.date} onChange={handleHeaderChange} />
-                            </div>
-                            <div className="space-y-2 md:col-span-2">
-                                <Label htmlFor="operator">Operador Responsável:</Label>
-                                <Input id="operator" value={headerData.operator} onChange={handleHeaderChange} />
+                    </div>
+                    
+                    <div className="p-6 md:p-8">
+                        <div className="mb-8">
+                            <h3 className="text-xl font-semibold mb-4 border-b pb-2 text-primary">Detalhes da Ordem de Serviço</h3>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div className="space-y-2">
+                                    <Label htmlFor="osNumber">Número da O.S:</Label>
+                                    <Input id="osNumber" value={headerData.osNumber} onChange={handleHeaderChange} />
+                                </div>
+                                <div className="space-y-2">
+                                    <Label htmlFor="clientNumber">Nº Cliente:</Label>
+                                    <Input id="clientNumber" value={headerData.clientNumber} onChange={handleHeaderChange} />
+                                </div>
+                                <div className="space-y-2">
+                                    <Label htmlFor="clientName">Nome do Cliente:</Label>
+                                    <Input id="clientName" value={headerData.clientName} onChange={handleHeaderChange} />
+                                </div>
+                                <div className="space-y-2">
+                                    <Label htmlFor="date">Data:</Label>
+                                    <Input id="date" type="date" value={headerData.date} onChange={handleHeaderChange} />
+                                </div>
+                                <div className="space-y-2 md:col-span-2">
+                                    <Label htmlFor="operator">Operador Responsável:</Label>
+                                    <Input id="operator" value={headerData.operator} onChange={handleHeaderChange} />
+                                </div>
                             </div>
                         </div>
 
-                        <Separator className="my-8" />
-
-                        <div className="space-y-6">
-                            {checklistItems.map((item, index) => (
-                                <div key={index} className="p-4 border rounded-lg bg-white break-inside-avoid transition-colors hover:bg-slate-50">
-                                    <p className="font-semibold mb-4 text-foreground">{index + 1}. {item}</p>
-                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center">
-                                        <RadioGroup
-                                            value={checklistData[item].option}
-                                            onValueChange={(value) => handleChecklistChange(item, 'option', value)}
-                                            className="flex items-center space-x-6"
-                                        >
-                                            <div className="flex items-center space-x-2">
-                                                <RadioGroupItem value="SIM" id={`${index}-sim`} />
-                                                <Label htmlFor={`${index}-sim`}>SIM</Label>
+                        <div>
+                            <h3 className="text-xl font-semibold mb-4 border-b pb-2 text-primary">Checklist de Itens</h3>
+                            <div className="space-y-4">
+                                {checklistItems.map((item, index) => (
+                                    <div key={index} className="p-4 border border-gray-200 rounded-lg bg-white break-inside-avoid transition-all duration-300 hover:shadow-lg hover:border-primary hover:scale-[1.02]">
+                                        <p className="font-semibold mb-4 text-foreground">{index + 1}. {item}</p>
+                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center">
+                                            <RadioGroup
+                                                value={checklistData[item].option}
+                                                onValueChange={(value) => handleChecklistChange(item, 'option', value)}
+                                                className="flex items-center space-x-6"
+                                            >
+                                                <div className="flex items-center space-x-2">
+                                                    <RadioGroupItem value="SIM" id={`${index}-sim`} />
+                                                    <Label htmlFor={`${index}-sim`}>SIM</Label>
+                                                </div>
+                                                <div className="flex items-center space-x-2">
+                                                    <RadioGroupItem value="NÃO" id={`${index}-nao`} />
+                                                    <Label htmlFor={`${index}-nao`}>NÃO</Label>
+                                                </div>
+                                                <div className="flex items-center space-x-2">
+                                                    <RadioGroupItem value="NC" id={`${index}-nc`} />
+                                                    <Label htmlFor={`${index}-nc`}>NC</Label>
+                                                </div>
+                                            </RadioGroup>
+                                            <div>
+                                                <Label htmlFor={`${index}-obs`} className="sr-only">Observações</Label>
+                                                <Textarea
+                                                    id={`${index}-obs`}
+                                                    placeholder="Observações..."
+                                                    value={checklistData[item].observation}
+                                                    onChange={(e) => handleChecklistChange(item, 'observation', e.target.value)}
+                                                    className="h-12 bg-slate-50"
+                                                />
                                             </div>
-                                            <div className="flex items-center space-x-2">
-                                                <RadioGroupItem value="NÃO" id={`${index}-nao`} />
-                                                <Label htmlFor={`${index}-nao`}>NÃO</Label>
-                                            </div>
-                                            <div className="flex items-center space-x-2">
-                                                <RadioGroupItem value="NC" id={`${index}-nc`} />
-                                                <Label htmlFor={`${index}-nc`}>NC</Label>
-                                            </div>
-                                        </RadioGroup>
-                                        <div>
-                                            <Label htmlFor={`${index}-obs`} className="sr-only">Observações</Label>
-                                            <Textarea
-                                                id={`${index}-obs`}
-                                                placeholder="Observações..."
-                                                value={checklistData[item].observation}
-                                                onChange={(e) => handleChecklistChange(item, 'observation', e.target.value)}
-                                                className="h-12"
-                                            />
                                         </div>
                                     </div>
-                                </div>
-                            ))}
+                                ))}
+                            </div>
                         </div>
-                    </CardContent>
-                </Card>
+                    </div>
+                </div>
             </div>
 
             <div className="mt-8 flex justify-center gap-4 print:hidden">
-                <Button onClick={handleGeneratePdf} size="lg">
+                <Button onClick={handleGeneratePdf} size="lg" className="bg-accent hover:bg-accent/90 text-accent-foreground font-bold shadow-lg hover:shadow-xl transition-shadow">
                     GERAR PDF
                 </Button>
-                <Button onClick={handlePrint} variant="outline" size="lg">
+                <Button onClick={handlePrint} variant="outline" size="lg" className="font-bold border-2 border-primary text-primary hover:bg-primary hover:text-primary-foreground transition-colors">
                     IMPRIMIR
                 </Button>
             </div>
