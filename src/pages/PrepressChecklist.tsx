@@ -108,20 +108,20 @@ const PrepressChecklist = () => {
     };
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-gray-100 to-gray-200 container mx-auto p-4 md:p-8 print:p-0 print:bg-white">
+        <div className="min-h-screen bg-gradient-to-br from-gray-100 to-gray-200 container mx-auto p-2 sm:p-4 md:p-8 print:p-0 print:bg-white">
             <div ref={printRef} className="print:p-8">
                 <div className="w-full max-w-4xl mx-auto bg-white rounded-2xl shadow-2xl overflow-hidden print:shadow-none print:border print:rounded-none">
-                    <div className="p-8 bg-slate-50 border-b-4 border-primary print:bg-transparent print:border-none">
-                        <img src="/logo.png" alt="Primacor Gráfica Logo" className="w-56 mx-auto mb-6" />
-                        <CardTitle className="text-3xl font-bold text-center text-foreground">
+                    <div className="p-6 sm:p-8 bg-slate-50 border-b-4 border-primary print:bg-transparent print:border-none">
+                        <img src="/logo.png" alt="Primacor Gráfica Logo" className="w-48 sm:w-56 mx-auto mb-6" />
+                        <CardTitle className="text-2xl sm:text-3xl font-bold text-center text-foreground">
                             Conferência de Pré-Impressão
                         </CardTitle>
                     </div>
                     
-                    <div className="p-6 md:p-8">
+                    <div className="p-4 sm:p-6 md:p-8">
                         <div className="mb-8">
-                            <h3 className="text-xl font-semibold mb-4 border-b pb-2 text-primary">Detalhes da Ordem de Serviço</h3>
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <h3 className="text-lg sm:text-xl font-semibold mb-4 border-b pb-2 text-primary">Detalhes da Ordem de Serviço</h3>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
                                 <div className="space-y-2">
                                     <Label htmlFor="osNumber">Número da O.S:</Label>
                                     <Input id="osNumber" value={headerData.osNumber} onChange={handleHeaderChange} />
@@ -146,7 +146,7 @@ const PrepressChecklist = () => {
                         </div>
 
                         <div>
-                            <h3 className="text-xl font-semibold mb-4 border-b pb-2 text-primary">Checklist de Itens</h3>
+                            <h3 className="text-lg sm:text-xl font-semibold mb-4 border-b pb-2 text-primary">Checklist de Itens</h3>
                             <div className="space-y-6">
                                 {checklistItems.map((item, index) => {
                                     const option = checklistData[item].option;
@@ -169,9 +169,9 @@ const PrepressChecklist = () => {
                                                 <div className="flex-shrink-0 w-8 h-8 bg-primary/20 text-primary font-bold rounded-md flex items-center justify-center mt-1">
                                                     {index + 1}
                                                 </div>
-                                                <p className="font-semibold text-foreground flex-grow text-base pt-1">{item}</p>
+                                                <p className="font-semibold text-foreground flex-grow text-sm sm:text-base pt-1">{item}</p>
                                             </div>
-                                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center pl-12">
+                                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center pl-4 sm:pl-12">
                                                 {index === 14 ? (
                                                     <div className="flex flex-wrap items-center gap-x-6 gap-y-2">
                                                         <div className="flex items-center space-x-2">
@@ -203,7 +203,7 @@ const PrepressChecklist = () => {
                                                     <RadioGroup
                                                         value={option}
                                                         onValueChange={(value) => handleChecklistChange(item, 'option', value)}
-                                                        className="flex items-center space-x-6"
+                                                        className="flex flex-wrap items-center gap-x-6 gap-y-2"
                                                     >
                                                         <div className="flex items-center space-x-2">
                                                             <RadioGroupItem value="SIM" id={`${index}-sim`} />
@@ -239,11 +239,11 @@ const PrepressChecklist = () => {
                 </div>
             </div>
 
-            <div className="mt-8 flex justify-center gap-4 print:hidden">
-                <Button onClick={handleGeneratePdf} size="lg" className="bg-accent hover:bg-accent/90 text-accent-foreground font-bold shadow-lg hover:shadow-xl transition-shadow">
+            <div className="mt-8 flex flex-col sm:flex-row justify-center gap-4 print:hidden px-4">
+                <Button onClick={handleGeneratePdf} size="lg" className="bg-accent hover:bg-accent/90 text-accent-foreground font-bold shadow-lg hover:shadow-xl transition-shadow w-full sm:w-auto">
                     GERAR PDF
                 </Button>
-                <Button onClick={handlePrint} variant="outline" size="lg" className="font-bold border-2 border-primary text-primary hover:bg-primary hover:text-primary-foreground transition-colors">
+                <Button onClick={handlePrint} variant="outline" size="lg" className="font-bold border-2 border-primary text-primary hover:bg-primary hover:text-primary-foreground transition-colors w-full sm:w-auto">
                     IMPRIMIR
                 </Button>
             </div>
