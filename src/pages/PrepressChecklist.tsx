@@ -23,7 +23,7 @@ const checklistItems = [
     "FEZ APONTAMENTO NO SISTEMA",
     "FOI ENVIADO CLICHÊ",
     "FOI ENVIADO FACA",
-    "QUAL MODO DE COR? (PANTONE) - (POLICROMIA) - (PRETO E BRANCO)"
+    "QUAL MODO DE COR?"
 ];
 
 const initialChecklistState = checklistItems.reduce((acc, item) => {
@@ -132,12 +132,18 @@ const PrepressChecklist = () => {
                             <div className="space-y-6">
                                 {checklistItems.map((item, index) => {
                                     const option = checklistData[item].option;
-                                    const itemClasses = {
-                                        'SIM': 'bg-primary/10 border-primary shadow-md',
-                                        'NÃO': 'bg-destructive/10 border-destructive shadow-md',
-                                        'NC': 'bg-accent/10 border-accent shadow-md',
-                                        '': 'bg-white border-gray-200'
-                                    }[option] || 'bg-white border-gray-200';
+                                    let itemClasses;
+
+                                    if (index === 14) { // Special case for the color mode question
+                                        itemClasses = option ? 'bg-primary/10 border-primary shadow-md' : 'bg-white border-gray-200';
+                                    } else {
+                                        itemClasses = {
+                                            'SIM': 'bg-primary/10 border-primary shadow-md',
+                                            'NÃO': 'bg-destructive/10 border-destructive shadow-md',
+                                            'NC': 'bg-accent/10 border-accent shadow-md',
+                                            '': 'bg-white border-gray-200'
+                                        }[option] || 'bg-white border-gray-200';
+                                    }
 
                                     return (
                                         <div key={index} className={`p-4 border-l-4 rounded-lg break-inside-avoid transition-all duration-300 hover:shadow-lg hover:scale-[1.01] ${itemClasses}`}>
@@ -148,24 +154,45 @@ const PrepressChecklist = () => {
                                                 <p className="font-semibold text-foreground flex-grow text-base pt-1">{item}</p>
                                             </div>
                                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center pl-12">
-                                                <RadioGroup
-                                                    value={option}
-                                                    onValueChange={(value) => handleChecklistChange(item, 'option', value)}
-                                                    className="flex items-center space-x-6"
-                                                >
-                                                    <div className="flex items-center space-x-2">
-                                                        <RadioGroupItem value="SIM" id={`${index}-sim`} />
-                                                        <Label htmlFor={`${index}-sim`}>SIM</Label>
-                                                    </div>
-                                                    <div className="flex items-center space-x-2">
-                                                        <RadioGroupItem value="NÃO" id={`${index}-nao`} />
-                                                        <Label htmlFor={`${index}-nao`}>NÃO</Label>
-                                                    </div>
-                                                    <div className="flex items-center space-x-2">
-                                                        <RadioGroupItem value="NC" id={`${index}-nc`} />
-                                                        <Label htmlFor={`${index}-nc`}>NC</Label>
-                                                    </div>
-                                                </RadioGroup>
+                                                {index === 14 ? (
+                                                    <RadioGroup
+                                                        value={option}
+                                                        onValueChange={(value) => handleChecklistChange(item, 'option', value)}
+                                                        className="flex flex-wrap items-center gap-x-6 gap-y-2"
+                                                    >
+                                                        <div className="flex items-center space-x-2">
+                                                            <RadioGroupItem value="PANTONE" id={`${index}-pantone`} />
+                                                            <Label htmlFor={`${index}-pantone`}>PANTONE</Label>
+                                                        </div>
+                                                        <div className="flex items-center space-x-2">
+                                                            <RadioGroupItem value="POLICROMIA" id={`${index}-policromia`} />
+                                                            <Label htmlFor={`${index}-policromia`}>POLICROMIA</Label>
+                                                        </div>
+                                                        <div className="flex items-center space-x-2">
+                                                            <RadioGroupItem value="PRETO E BRANCO" id={`${index}-pb`} />
+                                                            <Label htmlFor={`${index}-pb`}>PRETO E BRANCO</Label>
+                                                        </div>
+                                                    </RadioGroup>
+                                                ) : (
+                                                    <RadioGroup
+                                                        value={option}
+                                                        onValueChange={(value) => handleChecklistChange(item, 'option', value)}
+                                                        className="flex items-center space-x-6"
+                                                    >
+                                                        <div className="flex items-center space-x-2">
+                                                            <RadioGroupItem value="SIM" id={`${index}-sim`} />
+                                                            <Label htmlFor={`${index}-sim`}>SIM</Label>
+                                                        </div>
+                                                        <div className="flex items-center space-x-2">
+                                                            <RadioGroupItem value="NÃO" id={`${index}-nao`} />
+                                                            <Label htmlFor={`${index}-nao`}>NÃO</Label>
+                                                        </div>
+                                                        <div className="flex items-center space-x-2">
+                                                            <RadioGroupItem value="NC" id={`${index}-nc`} />
+                                                            <Label htmlFor={`${index}-nc`}>NC</Label>
+                                                        </div>
+                                                    </RadioGroup>
+                                                )}
                                                 <div>
                                                     <Label htmlFor={`${index}-obs`} className="sr-only">Observações</Label>
                                                     <Textarea
