@@ -142,7 +142,7 @@ const PrepressChecklist = () => {
                                     return (
                                         <div key={index} className={`p-4 border-l-4 rounded-lg break-inside-avoid transition-all duration-300 hover:shadow-lg hover:scale-[1.01] ${itemClasses}`}>
                                             <div className="flex items-start gap-4 mb-4">
-                                                <div className="flex-shrink-0 w-8 h-8 bg-primary/20 text-primary font-bold rounded-full flex items-center justify-center mt-1">
+                                                <div className="flex-shrink-0 w-8 h-8 bg-primary/20 text-primary font-bold rounded-md flex items-center justify-center mt-1">
                                                     {index + 1}
                                                 </div>
                                                 <p className="font-semibold text-foreground flex-grow text-base pt-1">{item}</p>
