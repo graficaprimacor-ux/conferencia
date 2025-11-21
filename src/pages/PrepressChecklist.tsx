@@ -129,42 +129,57 @@ const PrepressChecklist = () => {
 
                         <div>
                             <h3 className="text-xl font-semibold mb-4 border-b pb-2 text-primary">Checklist de Itens</h3>
-                            <div className="space-y-4">
-                                {checklistItems.map((item, index) => (
-                                    <div key={index} className="p-4 border border-gray-200 rounded-lg bg-white break-inside-avoid transition-all duration-300 hover:shadow-lg hover:border-primary hover:scale-[1.02]">
-                                        <p className="font-semibold mb-4 text-foreground">{index + 1}. {item}</p>
-                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center">
-                                            <RadioGroup
-                                                value={checklistData[item].option}
-                                                onValueChange={(value) => handleChecklistChange(item, 'option', value)}
-                                                className="flex items-center space-x-6"
-                                            >
-                                                <div className="flex items-center space-x-2">
-                                                    <RadioGroupItem value="SIM" id={`${index}-sim`} />
-                                                    <Label htmlFor={`${index}-sim`}>SIM</Label>
+                            <div className="space-y-6">
+                                {checklistItems.map((item, index) => {
+                                    const option = checklistData[item].option;
+                                    const itemClasses = {
+                                        'SIM': 'bg-primary/10 border-primary shadow-md',
+                                        'NÃO': 'bg-destructive/10 border-destructive shadow-md',
+                                        'NC': 'bg-accent/10 border-accent shadow-md',
+                                        '': 'bg-white border-gray-200'
+                                    }[option] || 'bg-white border-gray-200';
+
+                                    return (
+                                        <div key={index} className={`p-4 border-l-4 rounded-lg break-inside-avoid transition-all duration-300 hover:shadow-lg hover:scale-[1.01] ${itemClasses}`}>
+                                            <div className="flex items-start gap-4 mb-4">
+                                                <div className="flex-shrink-0 w-8 h-8 bg-primary/20 text-primary font-bold rounded-full flex items-center justify-center mt-1">
+                                                    {index + 1}
                                                 </div>
-                                                <div className="flex items-center space-x-2">
-                                                    <RadioGroupItem value="NÃO" id={`${index}-nao`} />
-                                                    <Label htmlFor={`${index}-nao`}>NÃO</Label>
+                                                <p className="font-semibold text-foreground flex-grow text-base pt-1">{item}</p>
+                                            </div>
+                                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center pl-12">
+                                                <RadioGroup
+                                                    value={option}
+                                                    onValueChange={(value) => handleChecklistChange(item, 'option', value)}
+                                                    className="flex items-center space-x-6"
+                                                >
+                                                    <div className="flex items-center space-x-2">
+                                                        <RadioGroupItem value="SIM" id={`${index}-sim`} />
+                                                        <Label htmlFor={`${index}-sim`}>SIM</Label>
+                                                    </div>
+                                                    <div className="flex items-center space-x-2">
+                                                        <RadioGroupItem value="NÃO" id={`${index}-nao`} />
+                                                        <Label htmlFor={`${index}-nao`}>NÃO</Label>
+                                                    </div>
+                                                    <div className="flex items-center space-x-2">
+                                                        <RadioGroupItem value="NC" id={`${index}-nc`} />
+                                                        <Label htmlFor={`${index}-nc`}>NC</Label>
+                                                    </div>
+                                                </RadioGroup>
+                                                <div>
+                                                    <Label htmlFor={`${index}-obs`} className="sr-only">Observações</Label>
+                                                    <Textarea
+                                                        id={`${index}-obs`}
+                                                        placeholder="Observações..."
+                                                        value={checklistData[item].observation}
+                                                        onChange={(e) => handleChecklistChange(item, 'observation', e.target.value)}
+                                                        className="h-12 bg-white/80"
+                                                    />
                                                 </div>
-                                                <div className="flex items-center space-x-2">
-                                                    <RadioGroupItem value="NC" id={`${index}-nc`} />
-                                                    <Label htmlFor={`${index}-nc`}>NC</Label>
-                                                </div>
-                                            </RadioGroup>
-                                            <div>
-                                                <Label htmlFor={`${index}-obs`} className="sr-only">Observações</Label>
-                                                <Textarea
-                                                    id={`${index}-obs`}
-                                                    placeholder="Observações..."
-                                                    value={checklistData[item].observation}
-                                                    onChange={(e) => handleChecklistChange(item, 'observation', e.target.value)}
-                                                    className="h-12 bg-slate-50"
-                                                />
                                             </div>
                                         </div>
-                                    </div>
-                                ))}
+                                    );
+                                })}
                             </div>
                         </div>
                     </div>
