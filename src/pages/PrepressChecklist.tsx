@@ -83,10 +83,6 @@ const PrepressChecklist = () => {
                 autoPaging: 'text',
                 width: 190, // 210mm (A4) - 20mm margin
                 windowWidth: 1024, // Render at a desktop-like width
-                html2canvas: {
-                    scale: 2,
-                    useCORS: true,
-                }
             });
         }
     };
