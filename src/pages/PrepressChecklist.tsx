@@ -5,6 +5,7 @@ import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Textarea } from "@/components/ui/textarea";
 import { CardTitle } from "@/components/ui/card";
+import { Checkbox } from "@/components/ui/checkbox";
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
 
@@ -52,6 +53,23 @@ const PrepressChecklist = () => {
             ...prev,
             [item]: { ...prev[item], [type]: value }
         }));
+    };
+
+    const handleColorOptionChange = (color: string, checked: boolean) => {
+        const item = checklistItems[14]; // "QUAL MODO DE COR?"
+        setChecklistData(prev => {
+            const currentOptions = prev[item].option ? prev[item].option.split(',').filter(Boolean) : [];
+            let newOptions;
+            if (checked) {
+                newOptions = [...currentOptions, color];
+            } else {
+                newOptions = currentOptions.filter(opt => opt !== color);
+            }
+            return {
+                ...prev,
+                [item]: { ...prev[item], option: newOptions.join(',') }
+            };
+        });
     };
 
     const handleGeneratePdf = () => {
@@ -155,24 +173,32 @@ const PrepressChecklist = () => {
                                             </div>
                                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center pl-12">
                                                 {index === 14 ? (
-                                                    <RadioGroup
-                                                        value={option}
-                                                        onValueChange={(value) => handleChecklistChange(item, 'option', value)}
-                                                        className="flex flex-wrap items-center gap-x-6 gap-y-2"
-                                                    >
+                                                    <div className="flex flex-wrap items-center gap-x-6 gap-y-2">
                                                         <div className="flex items-center space-x-2">
-                                                            <RadioGroupItem value="PANTONE" id={`${index}-pantone`} />
+                                                            <Checkbox
+                                                                id={`${index}-pantone`}
+                                                                checked={checklistData[item].option.includes('PANTONE')}
+                                                                onCheckedChange={(checked) => handleColorOptionChange('PANTONE', !!checked)}
+                                                            />
                                                             <Label htmlFor={`${index}-pantone`}>PANTONE</Label>
                                                         </div>
                                                         <div className="flex items-center space-x-2">
-                                                            <RadioGroupItem value="POLICROMIA" id={`${index}-policromia`} />
+                                                            <Checkbox
+                                                                id={`${index}-policromia`}
+                                                                checked={checklistData[item].option.includes('POLICROMIA')}
+                                                                onCheckedChange={(checked) => handleColorOptionChange('POLICROMIA', !!checked)}
+                                                            />
                                                             <Label htmlFor={`${index}-policromia`}>POLICROMIA</Label>
                                                         </div>
                                                         <div className="flex items-center space-x-2">
-                                                            <RadioGroupItem value="PRETO E BRANCO" id={`${index}-pb`} />
+                                                            <Checkbox
+                                                                id={`${index}-pb`}
+                                                                checked={checklistData[item].option.includes('PRETO E BRANCO')}
+                                                                onCheckedChange={(checked) => handleColorOptionChange('PRETO E BRANCO', !!checked)}
+                                                            />
                                                             <Label htmlFor={`${index}-pb`}>PRETO E BRANCO</Label>
                                                         </div>
-                                                    </RadioGroup>
+                                                    </div>
                                                 ) : (
                                                     <RadioGroup
                                                         value={option}
