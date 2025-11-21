@@ -75,37 +75,28 @@ const PrepressChecklist = () => {
     const handleGeneratePdf = () => {
         const input = printRef.current;
         if (input) {
-            // Render at a fixed width to ensure a consistent, desktop-like layout in the PDF,
-            // which helps prevent excessive page breaks.
             html2canvas(input, { 
                 scale: 2, 
                 useCORS: true,
-                windowWidth: 1024 // A typical desktop width to render the content
+                windowWidth: 1024
             }).then(canvas => {
                 const imgData = canvas.toDataURL('image/png');
                 const pdf = new jsPDF('p', 'mm', 'a4');
                 const pdfWidth = pdf.internal.pageSize.getWidth();
                 const pdfHeight = pdf.internal.pageSize.getHeight();
-
                 const canvasAspectRatio = canvas.width / canvas.height;
                 const imgWidth = pdfWidth;
                 const imgHeight = imgWidth / canvasAspectRatio;
-
                 let heightLeft = imgHeight;
                 let position = 0;
-
-                // Add the first page
                 pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
                 heightLeft -= pdfHeight;
-
-                // Add subsequent pages if needed
                 while (heightLeft > 0) {
                     position -= pdfHeight;
                     pdf.addPage();
                     pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
                     heightLeft -= pdfHeight;
                 }
-                
                 pdf.save(`OS_${headerData.osNumber || 'checklist'}.pdf`);
             });
         }
@@ -155,87 +146,77 @@ const PrepressChecklist = () => {
 
                         <div>
                             <h3 className="text-lg sm:text-xl font-semibold mb-4 border-b pb-2 text-primary">Checklist de Itens</h3>
-                            <div className="space-y-4">
+                            <div className="space-y-3">
                                 {checklistItems.map((item, index) => {
                                     const option = checklistData[item].option;
                                     let itemClasses;
 
-                                    if (index === 14) { // Special case for the color mode question
-                                        itemClasses = option ? 'bg-primary/10 border-primary shadow-md' : 'bg-white border-gray-200';
+                                    if (index === 14) {
+                                        itemClasses = option ? 'bg-primary/10 border-primary shadow-sm' : 'bg-white border-gray-200';
                                     } else {
                                         itemClasses = {
-                                            'SIM': 'bg-primary/10 border-primary shadow-md',
-                                            'NÃO': 'bg-destructive/10 border-destructive shadow-md',
-                                            'NC': 'bg-accent/10 border-accent shadow-md',
+                                            'SIM': 'bg-primary/10 border-primary shadow-sm',
+                                            'NÃO': 'bg-destructive/10 border-destructive shadow-sm',
+                                            'NC': 'bg-accent/10 border-accent shadow-sm',
                                             '': 'bg-white border-gray-200'
                                         }[option] || 'bg-white border-gray-200';
                                     }
 
                                     return (
-                                        <div key={index} className={`p-3 border-l-4 rounded-lg break-inside-avoid transition-all duration-300 hover:shadow-lg hover:scale-[1.01] ${itemClasses}`}>
-                                            <div className="flex items-start gap-3 mb-3">
-                                                <div className="flex-shrink-0 w-7 h-7 bg-primary/20 text-primary font-bold rounded-md flex items-center justify-center">
-                                                    {index + 1}
-                                                </div>
-                                                <p className="font-semibold text-foreground flex-grow text-sm sm:text-base">{item}</p>
-                                            </div>
-                                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center pl-10">
-                                                {index === 14 ? (
-                                                    <div className="flex flex-wrap items-center gap-x-6 gap-y-2">
-                                                        <div className="flex items-center space-x-2">
-                                                            <Checkbox
-                                                                id={`${index}-pantone`}
-                                                                checked={checklistData[item].option.includes('PANTONE')}
-                                                                onCheckedChange={(checked) => handleColorOptionChange('PANTONE', !!checked)}
-                                                            />
-                                                            <Label htmlFor={`${index}-pantone`}>PANTONE</Label>
-                                                        </div>
-                                                        <div className="flex items-center space-x-2">
-                                                            <Checkbox
-                                                                id={`${index}-policromia`}
-                                                                checked={checklistData[item].option.includes('POLICROMIA')}
-                                                                onCheckedChange={(checked) => handleColorOptionChange('POLICROMIA', !!checked)}
-                                                            />
-                                                            <Label htmlFor={`${index}-policromia`}>POLICROMIA</Label>
-                                                        </div>
-                                                        <div className="flex items-center space-x-2">
-                                                            <Checkbox
-                                                                id={`${index}-pb`}
-                                                                checked={checklistData[item].option.includes('PRETO E BRANCO')}
-                                                                onCheckedChange={(checked) => handleColorOptionChange('PRETO E BRANCO', !!checked)}
-                                                            />
-                                                            <Label htmlFor={`${index}-pb`}>PRETO E BRANCO</Label>
-                                                        </div>
-                                                    </div>
-                                                ) : (
-                                                    <RadioGroup
-                                                        value={option}
-                                                        onValueChange={(value) => handleChecklistChange(item, 'option', value)}
-                                                        className="flex flex-wrap items-center gap-x-6 gap-y-2"
-                                                    >
-                                                        <div className="flex items-center space-x-2">
-                                                            <RadioGroupItem value="SIM" id={`${index}-sim`} />
-                                                            <Label htmlFor={`${index}-sim`}>SIM</Label>
-                                                        </div>
-                                                        <div className="flex items-center space-x-2">
-                                                            <RadioGroupItem value="NÃO" id={`${index}-nao`} />
-                                                            <Label htmlFor={`${index}-nao`}>NÃO</Label>
-                                                        </div>
-                                                        <div className="flex items-center space-x-2">
-                                                            <RadioGroupItem value="NC" id={`${index}-nc`} />
-                                                            <Label htmlFor={`${index}-nc`}>NC</Label>
-                                                        </div>
-                                                    </RadioGroup>
-                                                )}
+                                        <div key={index} className={`p-2 border-l-4 rounded-lg break-inside-avoid transition-all duration-300 ${itemClasses}`}>
+                                            <div className="grid grid-cols-1 md:grid-cols-2 gap-x-4 items-start">
+                                                {/* Left Column */}
                                                 <div>
+                                                    <div className="flex items-center gap-2 mb-2">
+                                                        <div className="flex-shrink-0 w-6 h-6 bg-primary/20 text-primary font-bold rounded-md flex items-center justify-center text-sm">
+                                                            {index + 1}
+                                                        </div>
+                                                        <p className="font-semibold text-foreground flex-grow text-sm">{item}</p>
+                                                    </div>
+                                                    
+                                                    {index === 14 ? (
+                                                        <div className="flex flex-wrap items-center gap-x-4 gap-y-1 pl-8">
+                                                            <div className="flex items-center space-x-2">
+                                                                <Checkbox id={`${index}-pantone`} checked={checklistData[item].option.includes('PANTONE')} onCheckedChange={(checked) => handleColorOptionChange('PANTONE', !!checked)} />
+                                                                <Label htmlFor={`${index}-pantone`} className="text-sm">PANTONE</Label>
+                                                            </div>
+                                                            <div className="flex items-center space-x-2">
+                                                                <Checkbox id={`${index}-policromia`} checked={checklistData[item].option.includes('POLICROMIA')} onCheckedChange={(checked) => handleColorOptionChange('POLICROMIA', !!checked)} />
+                                                                <Label htmlFor={`${index}-policromia`} className="text-sm">POLICROMIA</Label>
+                                                            </div>
+                                                            <div className="flex items-center space-x-2">
+                                                                <Checkbox id={`${index}-pb`} checked={checklistData[item].option.includes('PRETO E BRANCO')} onCheckedChange={(checked) => handleColorOptionChange('PRETO E BRANCO', !!checked)} />
+                                                                <Label htmlFor={`${index}-pb`} className="text-sm">PRETO E BRANCO</Label>
+                                                            </div>
+                                                        </div>
+                                                    ) : (
+                                                        <RadioGroup value={option} onValueChange={(value) => handleChecklistChange(item, 'option', value)} className="flex flex-wrap items-center gap-x-4 gap-y-1 pl-8">
+                                                            <div className="flex items-center space-x-2">
+                                                                <RadioGroupItem value="SIM" id={`${index}-sim`} />
+                                                                <Label htmlFor={`${index}-sim`} className="text-sm">SIM</Label>
+                                                            </div>
+                                                            <div className="flex items-center space-x-2">
+                                                                <RadioGroupItem value="NÃO" id={`${index}-nao`} />
+                                                                <Label htmlFor={`${index}-nao`} className="text-sm">NÃO</Label>
+                                                            </div>
+                                                            <div className="flex items-center space-x-2">
+                                                                <RadioGroupItem value="NC" id={`${index}-nc`} />
+                                                                <Label htmlFor={`${index}-nc`} className="text-sm">NC</Label>
+                                                            </div>
+                                                        </RadioGroup>
+                                                    )}
+                                                </div>
+
+                                                {/* Right Column */}
+                                                <div className="h-full">
                                                     <Label htmlFor={`${index}-obs`} className="sr-only">Observações</Label>
                                                     <Textarea
                                                         id={`${index}-obs`}
                                                         placeholder="Observações..."
                                                         value={checklistData[item].observation}
                                                         onChange={(e) => handleChecklistChange(item, 'observation', e.target.value)}
-                                                        className="bg-white/80"
-                                                        rows={1}
+                                                        className="bg-white/80 h-full min-h-[52px] text-sm"
+                                                        rows={2}
                                                     />
                                                 </div>
                                             </div>
