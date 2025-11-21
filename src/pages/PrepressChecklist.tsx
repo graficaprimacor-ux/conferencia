@@ -91,16 +91,17 @@ const PrepressChecklist = () => {
     };
 
     return (
-        <div className="container mx-auto p-4 md:p-8 bg-gray-50 print:p-0 print:bg-white">
+        <div className="container mx-auto p-4 md:p-8 bg-slate-50 print:p-0 print:bg-white">
             <div ref={printRef}>
-                <Card className="w-full max-w-4xl mx-auto shadow-lg print:shadow-none print:border-none">
-                    <CardHeader>
-                        <CardTitle className="text-2xl font-bold text-center text-gray-800">
+                <Card className="w-full max-w-4xl mx-auto shadow-xl print:shadow-none print:border-none">
+                    <CardHeader className="text-center">
+                        <img src="/logo.png" alt="Primacor Gráfica Logo" className="w-64 mx-auto mb-6" />
+                        <CardTitle className="text-3xl font-bold text-foreground">
                             Conferência de Pré-Impressão
                         </CardTitle>
                     </CardHeader>
-                    <CardContent className="p-6">
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                    <CardContent className="p-6 md:p-8">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
                             <div className="space-y-2">
                                 <Label htmlFor="osNumber">Número da O.S:</Label>
                                 <Input id="osNumber" value={headerData.osNumber} onChange={handleHeaderChange} />
@@ -127,13 +128,13 @@ const PrepressChecklist = () => {
 
                         <div className="space-y-6">
                             {checklistItems.map((item, index) => (
-                                <div key={index} className="p-4 border rounded-lg bg-white break-inside-avoid">
-                                    <p className="font-semibold mb-4">{index + 1}. {item}</p>
-                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div key={index} className="p-4 border rounded-lg bg-white break-inside-avoid transition-colors hover:bg-slate-50">
+                                    <p className="font-semibold mb-4 text-foreground">{index + 1}. {item}</p>
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center">
                                         <RadioGroup
                                             value={checklistData[item].option}
                                             onValueChange={(value) => handleChecklistChange(item, 'option', value)}
-                                            className="flex items-center space-x-4"
+                                            className="flex items-center space-x-6"
                                         >
                                             <div className="flex items-center space-x-2">
                                                 <RadioGroupItem value="SIM" id={`${index}-sim`} />
@@ -167,10 +168,10 @@ const PrepressChecklist = () => {
             </div>
 
             <div className="mt-8 flex justify-center gap-4 print:hidden">
-                <Button onClick={handleGeneratePdf} className="bg-blue-600 hover:bg-blue-700">
+                <Button onClick={handleGeneratePdf} size="lg">
                     GERAR PDF
                 </Button>
-                <Button onClick={handlePrint} variant="outline">
+                <Button onClick={handlePrint} variant="outline" size="lg">
                     IMPRIMIR
                 </Button>
             </div>
